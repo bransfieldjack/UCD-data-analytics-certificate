@@ -44,6 +44,21 @@ def main():
     # rearrange the data
     new_df = pd.DataFrame(df['co2'].values.tolist())
 
+    # Now you can see the dataframe is more suited for manipulation
+    """
+          year month day   cycle   trend
+    0     2011     1   1  391.25  389.75
+    1     2011     1   2  391.29  389.76
+    2     2011     1   3  391.32  389.77
+    3     2011     1   4  391.36  389.77
+    4     2011     1   5  391.39  389.78
+    ...    ...   ...  ..     ...     ...
+    3743  2021     4   1  416.28  414.44
+    3744  2021     4   2  416.29  414.45
+    3745  2021     4   3  416.30  414.46
+    3746  2021     4   4  416.32  414.46
+    3747  2021     4   5  416.33  414.47
+    """
     print(new_df)
 
 # python specific, allows explicit call
