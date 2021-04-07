@@ -21,7 +21,7 @@ def main():
     # print(type(data))
 
     # coerce the data into a dataframe
-    df = pd.DataFrame.from_dict(data, orient="columns")
+    unformatted_df = pd.DataFrame.from_dict(data, orient="columns")
 
     # verify the output
     # print(df)
@@ -42,7 +42,7 @@ def main():
     """
 
     # rearrange the data
-    new_df = pd.DataFrame(df['co2'].values.tolist())
+    df = pd.DataFrame(unformatted_df["co2"].values.tolist())
 
     # Now you can see the dataframe is more suited for manipulation
     """
@@ -59,7 +59,40 @@ def main():
     3746  2021     4   4  416.32  414.46
     3747  2021     4   5  416.33  414.47
     """
-    print(new_df)
+
+    # Check the dataframe for any null or duplicate values
+
+    # rows with missing data
+    rows_null_data = df[df.isnull()]
+
+    # the sum null values in a specific row (replace with any column from dataframe)
+    sum_rows_null_data = df["trend"].isnull().sum()
+
+    # check for NaN under single column (replace with any column from dataframe)
+    nan_column = df["trend"].isnull().values.any()
+    # print(nan_column)
+
+    """
+    The global warming dataset I have chosen has already been cleaned, and appears to be in good condition. 
+    For the sake of fulfilling the milestone requirements of the project, I will demonstrate some data cleansing
+    best practices with a datasets that is better suited for the same:
+
+    Dataset: Iris Species
+
+    Classify iris plants into three species in this classic dataset
+    
+    https://www.kaggle.com/uciml/iris
+    """
+
+    # This data is from a CSV import, the file can be found in the data folder of the project repo.
+    # import the csv file:
+    iris_species = pd.read_csv("data/iris.csv")
+    iris_species_dataframe = pd.DataFrame(iris_species)
+
+    # get the number of distinct values in a column, in this case the number of different species in the species column
+    distinct_species = iris_species_dataframe["Species"].value_counts()
+    print(distinct_species)
+
 
 # python specific, allows explicit call
 if __name__ == "__main__":
