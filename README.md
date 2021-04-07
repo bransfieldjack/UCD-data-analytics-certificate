@@ -67,7 +67,9 @@ How to use this repository? All information in the README.md file is supplementa
 
 ### Git setup
 
-I am using Mac OS Catalina 10.15.7. To get install git on my local machine, I open the terminal and navigate to my working directory/folder where my project is.
+I am using Mac OS Catalina 10.15.7. 
+
+To get git installed on my local machine, I open the terminal and navigate to my working directory/folder where my project is.
  
 ```
 cd UCD/project/
@@ -76,7 +78,7 @@ Next I need to initialise this folder with the following command, in order to cr
 ```
 git init
 ```
-The next thing you will need to do is an a README.md file (this is the file you are reading right now) where you can add notes on packages, setup, how to etc. 
+The next thing you will need to do is add a README.md file (this is the file you are reading right now) where you can add notes on packages, setup, how to etc. 
 ```
 git add README.md
 ```
@@ -99,18 +101,19 @@ git push -u origin main
 ##### Git cheat sheet:
 - ```git init``` initialise your local repo
 - ```git status``` show the current status of pending commits/files to be added
-- ```git commit -m <message describing commit here>``` making a commit, be sure to add a text description between the <>
+- ```git commit -m <message describing commit here>``` making a commit, be sure to add a text description between the <> 
 - ```git remote -v``` check which remote repo you are connected to 
 - ```git branch``` check which branch you are on
 - ```git checkout <new branch>``` create or switch to another branch
 
 Recommended sequential flow for every commit: 
-		- ```git status``` (shows you pending changes, usually in red text)
+		- ```git status``` (shows your pending changes, usually in red text but depends on your terminal colours)
 		- ```git add -A .```
-		- ```git status``` (again, will show you all the changes made in green text)
+		- ```git status``` (again, will show you all the changes made, usually in green text but depends on your terminal colours)
 		- ```git commit -m <add a message here>``` create a commit with a description of what you are committing/the changes you have made.
 		- ```git push origin main``` push your local changes to the remote github repository
 <hr>
+
 ### Some notes about Jupyter Notebooks
 
   
