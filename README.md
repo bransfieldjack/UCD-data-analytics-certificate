@@ -1,5 +1,5 @@
 # UCD-data-analytics-certificate
-
+![](https://exo-demo-image-hosting.s3-ap-southeast-2.amazonaws.com/Screen+Shot+2021-04-07+at+7.13.42+am.png)
 ### Notes
 How to use this repository? All information in the README.md file is supplementary to the official project report and code. This repository is intended to provide insight into my methods/analysis. 
 
