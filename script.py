@@ -91,7 +91,35 @@ def main():
 
     # get the number of distinct values in a column, in this case the number of different species in the species column
     distinct_species = iris_species_dataframe["Species"].value_counts()
-    print(distinct_species)
+
+    """
+    Output: 
+
+    Iris-setosa        50
+    Iris-versicolor    50
+    Iris-virginica     50
+    """
+
+    # visually represent this breakdown on a bar-chart:
+
+    # create the x-labels for the graph
+    distinct_species_x_labels_unformatted = list(distinct_species.index)
+    distinct_species_y_labels_unformatted = list(distinct_species.values)
+
+    # iterate over the list and remove the 'Iris-' part of the string, it is not needed
+    # store the new formatted values in a new list called 'distinct_species_x_labels_formatted.
+
+    distinct_species_x_labels_formatted = []
+
+    for item in distinct_species_x_labels_unformatted:
+        distinct_species_x_labels_formatted.append(item.split("-")[-1])
+
+    bar_chart = plt.bar(
+        distinct_species_x_labels_formatted,
+        distinct_species_y_labels_unformatted,
+        color=["cyan", "magenta", "royalblue"],
+    )
+    plt.show()
 
 
 # python specific, allows explicit call
