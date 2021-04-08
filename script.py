@@ -119,7 +119,37 @@ def main():
         distinct_species_y_labels_unformatted,
         color=["cyan", "magenta", "royalblue"],
     )
-    plt.show()
+    # plt.show()
+
+    # observe the different variable types in the dataframe
+    """
+    print(iris_species_dataframe.dtypes)
+
+    output:
+
+    Id                 int64
+    SepalLengthCm    float64
+    SepalWidthCm     float64
+    PetalLengthCm    float64
+    PetalWidthCm     float64
+    Species           object
+    dtype: object
+
+    """
+
+    # get the number of na values per column:
+    nan_values_per_column = iris_species_dataframe.isna().sum()
+    """
+    Output:
+    
+    Id               0
+    SepalLengthCm    0
+    SepalWidthCm     0
+    PetalLengthCm    0
+    PetalWidthCm     0
+    Species          0
+    dtype: int64
+    """
 
 
 # python specific, allows explicit call
