@@ -5,6 +5,12 @@ import matplotlib.pyplot as plt
 
 def main():
 
+    """
+    ==================================================================================================================
+    Importing data from an API:
+    ==================================================================================================================
+    """
+
     # specify the required format of the data requested from the api
     headers = {
         "Content-type": "application/json",
@@ -26,9 +32,11 @@ def main():
     # verify the output
     # print(df)
 
-    # Beging data cleaning
     """
-    Currently the dataframe exists in the following format:
+    ==================================================================================================================
+    Begin analysis here:
+    ==================================================================================================================
+    Currently the imported data exists in the dataframe in the following format:
 
                                                         co2
     0     {'year': '2011', 'month': '1', 'day': '1', 'cy...
@@ -37,11 +45,12 @@ def main():
     3     {'year': '2011', 'month': '1', 'day': '4', 'cy...
     4     {'year': '2011', 'month': '1', 'day': '5', 'cy...
 
-    This is not optimal, I want to rearrange the data so that the keys of each dictionary/json
+    This is not optimal, I want to reshape the data so that the keys of each dictionary/json
     object are dataframe columns corresponding to their associated values. 
+    ==================================================================================================================
     """
 
-    # rearrange the data
+    # reshape the data
     df = pd.DataFrame(unformatted_df["co2"].values.tolist())
 
     # Now you can see the dataframe is more suited for manipulation
@@ -60,19 +69,54 @@ def main():
     3747  2021     4   5  416.33  414.47
     """
 
-    # Check the dataframe for any null or duplicate values
+    # get the shape of the dataframe:
+    # print(df.shape)
+    """
+    Output: 
+    (3752, 5)
+    3752 rows and 5 columns
+    """
+
+    # Check the dataframe for any null or duplicate values:
 
     # rows with missing data
     rows_null_data = df[df.isnull()]
 
-    # the sum null values in a specific row (replace with any column from dataframe)
-    sum_rows_null_data = df["trend"].isnull().sum()
+    """
+    Get the sum of all null values in a specific row (replace with any column from dataframe).
+    Instead of manually assigning each column name and checking individually, I used a utility function 'check_rows_null_values()'.
+    The function will use a for loop to iterate over a list of column names contained in the dataframe, 
+    and return a count for the number of null values in each columns corresponding rows. 
+    """
 
-    # check for NaN under single column (replace with any column from dataframe)
-    nan_column = df["trend"].isnull().values.any()
-    # print(nan_column)
+    def check_rows_null_values(columns):
+        """
+        Expects a parameter called 'columns' of type list.
+        The function will iterate over the columns list and return a new list containing a value dictionary
+        with each column name as the key and the count of nulls as the corresponding value.
+        This method can be reused elsewhere in the program, hence avoiding the DRY principal of pythonic programming.
+        """
+        value_dict_list = (
+            []
+        )  # list to store the results of the for loop operation, which will be a sequence of dicts for each column with corresponding values.
+        for column in columns:
+            value_dict = {
+                "|Column name|": column,
+                "|Null count in rows|": df[column].isnull().sum(),
+            }
+            value_dict_list.append(value_dict)
+        return value_dict_list
+
+    columns_list = check_rows_null_values(df.columns)
+
+    # (optional) for ease of use, convert the list of dict again to a dataframe to get a report of the findings:
+    null_row_value_report = pd.DataFrame(columns_list)
+    # print(null_row_value_report.to_string(index=False))
 
     """
+    ==================================================================================================================
+    Dataset cleaning:
+    ==================================================================================================================
     The global warming dataset I have chosen has already been cleaned, and appears to be in good condition. 
     For the sake of fulfilling the milestone requirements of the project, I will demonstrate some data cleansing
     best practices with a datasets that is better suited for the same:
@@ -82,6 +126,7 @@ def main():
     Classify iris plants into three species in this classic dataset
     
     https://www.kaggle.com/uciml/iris
+    ==================================================================================================================
     """
 
     # This data is from a CSV import, the file can be found in the data folder of the project repo.
