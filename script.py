@@ -1,41 +1,22 @@
-import requests, json
 import pandas as pd
 import matplotlib.pyplot as plt
+from utilities import *
 
 
 def main():
 
     """
     ==================================================================================================================
-    Importing data from an API:
+    Importing CO2 data from the https://global-warming.org/ API
+    Url is: https://global-warming.org/api/co2-api
     ==================================================================================================================
     """
 
-    # specify the required format of the data requested from the api
-    headers = {
-        "Content-type": "application/json",
-        "Content-Type": "application/json;charset=UTF-8",
-    }
-
-    # make the request
-    request = requests.get("https://global-warming.org/api/co2-api", headers=headers)
-
-    # assign the json result to a variable called 'data'
-    data = request.json()
-
-    # confirm the data has the expected type
-    # print(type(data))
-
-    # coerce the data into a dataframe
-    unformatted_df = pd.DataFrame.from_dict(data, orient="columns")
-
-    # verify the output
-    # print(df)
+    util = Utility()
+    data = util.fetch_data_from_api("https://global-warming.org/api/co2-api")
+    unformatted_co2_df = pd.DataFrame.from_dict(data, orient="columns")
 
     """
-    ==================================================================================================================
-    Begin analysis here:
-    ==================================================================================================================
     Currently the imported data exists in the dataframe in the following format:
 
                                                         co2
@@ -51,7 +32,7 @@ def main():
     """
 
     # reshape the data
-    df = pd.DataFrame(unformatted_df["co2"].values.tolist())
+    co2_df = pd.DataFrame(unformatted_co2_df["co2"].values.tolist())
 
     # Now you can see the dataframe is more suited for manipulation
     """
@@ -80,7 +61,7 @@ def main():
     # Check the dataframe for any null or duplicate values:
 
     # rows with missing data
-    rows_null_data = df[df.isnull()]
+    rows_null_data = co2_df[co2_df.isnull()]
 
     """
     Get the sum of all null values in a specific row (replace with any column from dataframe).
@@ -89,29 +70,35 @@ def main():
     and return a count for the number of null values in each columns corresponding rows. 
     """
 
-    def check_rows_null_values(columns):
-        """
-        Expects a parameter called 'columns' of type list.
-        The function will iterate over the columns list and return a new list containing a value dictionary
-        with each column name as the key and the count of nulls as the corresponding value.
-        This method can be reused elsewhere in the program, hence avoiding the DRY principal of pythonic programming.
-        """
-        value_dict_list = (
-            []
-        )  # list to store the results of the for loop operation, which will be a sequence of dicts for each column with corresponding values.
-        for column in columns:
-            value_dict = {
-                "|Column name|": column,
-                "|Null count in rows|": df[column].isnull().sum(),
-            }
-            value_dict_list.append(value_dict)
-        return value_dict_list
-
-    columns_list = check_rows_null_values(df.columns)
+    util = Utility(co2_df)  # init utility class with dataframe
+    columns_list = util.check_rows_null_values(
+        co2_df.columns
+    )  # call check_rows_null_values()
 
     # (optional) for ease of use, convert the list of dict again to a dataframe to get a report of the findings:
     null_row_value_report = pd.DataFrame(columns_list)
     # print(null_row_value_report.to_string(index=False))
+
+    """
+    CO2 dataframe ready for use:
+    """
+    co2_dataframe = co2_df
+
+    """
+    ==================================================================================================================
+    Importing Temperature data from the https://global-warming.org/ API
+    Url is: https://global-warming.org/api/temperature-api
+    ==================================================================================================================
+    """
+
+    util = Utility()
+    data = util.fetch_data_from_api("https://global-warming.org/api/temperature-api")
+    unformatted_temp_df = pd.DataFrame.from_dict(data, orient="columns")
+
+    # reshape the data
+    temp_df = pd.DataFrame(unformatted_temp_df["result"].values.tolist())
+    print("temp_df")
+    print(temp_df)
 
     """
     ==================================================================================================================
