@@ -12,8 +12,7 @@ def main():
     ==================================================================================================================
     """
 
-    util = Utility()
-    data = util.fetch_data_from_api("https://global-warming.org/api/co2-api")
+    data = Utility().fetch_data_from_api("https://global-warming.org/api/co2-api")
     unformatted_co2_df = pd.DataFrame.from_dict(data, orient="columns")
 
     """
@@ -33,6 +32,7 @@ def main():
 
     # reshape the data
     co2_df = pd.DataFrame(unformatted_co2_df["co2"].values.tolist())
+    co2_df["year"] = co2_df["year"].astype(float).astype(int)
 
     # Now you can see the dataframe is more suited for manipulation
     """
@@ -80,25 +80,70 @@ def main():
     # print(null_row_value_report.to_string(index=False))
 
     """
-    CO2 dataframe ready for use:
-    """
-    co2_dataframe = co2_df
-
-    """
     ==================================================================================================================
     Importing Temperature data from the https://global-warming.org/ API
     Url is: https://global-warming.org/api/temperature-api
     ==================================================================================================================
     """
 
-    util = Utility()
-    data = util.fetch_data_from_api("https://global-warming.org/api/temperature-api")
+    data = Utility().fetch_data_from_api(
+        "https://global-warming.org/api/temperature-api"
+    )
     unformatted_temp_df = pd.DataFrame.from_dict(data, orient="columns")
 
     # reshape the data
     temp_df = pd.DataFrame(unformatted_temp_df["result"].values.tolist())
-    print("temp_df")
-    print(temp_df)
+
+    # the temperature data has a data range from years 1880 - 2021, but I am only interested in from 2011 onwards, similar to the co2 data.
+    # convert all values in the time column to type int.
+    temp_df["time"] = temp_df["time"].astype(float).astype(int)
+
+    # to see how many values exist for each year in the dataframe:
+    months_per_year = Utility(temp_df).get_row_value_counts("time")
+
+    # greater than the start date and smaller than the end date
+    time_filter = (temp_df["time"] >= 2011) & (temp_df["time"] <= 2021)
+
+    # the final (usable) temperature dataframe after formatting:
+    temp_df = temp_df.loc[time_filter]
+    temp_df.rename(columns={"time": "year"}, inplace=True)
+
+    """
+    Merge both the co2 dataframe and the temperature dataframes:
+    """
+
+    dataframes_merged = pd.merge(co2_df, temp_df)
+
+    # remove unsued columns (month & day)
+    del dataframes_merged["month"]
+    del dataframes_merged["day"]
+
+    # reset the dataframe index
+    reindexed_final_df = dataframes_merged.set_index("year")
+
+    print(reindexed_final_df)
+
+    # reuse of utility function to see how many unique values exist for each year in the dataframe:
+    uniq_values_per_year = Utility(reindexed_final_df).get_row_value_counts("year")
+    """
+    Output: 
+
+          cycle  trend  station  land
+    year                             
+    2011   4380   4380     4380  4380
+    2012   4392   4392     4392  4392
+    2013   4380   4380     4380  4380
+    2014   4380   4380     4380  4380
+    2015   4380   4380     4380  4380
+    2016   4392   4392     4392  4392
+    2017   4380   4380     4380  4380
+    2018   4380   4380     4380  4380
+    2019   4380   4380     4380  4380
+    2020   4392   4392     4392  4392
+    2021    200    200      200   200
+    """
+
+    # begin plotting
 
     """
     ==================================================================================================================

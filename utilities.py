@@ -1,11 +1,12 @@
 import requests, json
+import pandas as pd
 
 
 class Utility:
 
     """
-    A utility class to encapsulate reusable utility functionality for my script. (Python DRY)
-    The class constructor expects an optional 'df' parameter of dataframe, defaulting to None type.
+    A utility class to encapsulate reusable functionality for my script (DRY).
+    The class constructor expects an optional 'df' parameter of dataframe, defaulting to None.
     """
 
     def __init__(self, df=None):
@@ -21,11 +22,15 @@ class Utility:
             "Content-type": "application/json",
             "Content-Type": "application/json;charset=UTF-8",
         }
-        # make the request
-        request = requests.get(url, headers=headers)
-        # assign the json result to a variable called 'data'
-        data = request.json()
-        return data
+        try:
+            # make the request
+            request = requests.get(url, headers=headers)
+            # assign the json result to a variable called 'data'
+            data = request.json()
+            return data
+        except ValueError as exception:
+            print("An exception occurred in 'fetch_data_from_api()': " + exception)
+            return "An exception occurred in 'fetch_data_from_api()': " + exception
 
     def check_rows_null_values(self, columns):
         """
@@ -45,3 +50,7 @@ class Utility:
             value_dict_list.append(value_dict)
         self._row_null_values = value_dict_list
         return self._row_null_values
+
+    def get_row_value_counts(self, column):
+        res = self._df.groupby([column]).count()
+        return res
