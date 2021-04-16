@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 from utilities import *
 
@@ -119,9 +120,7 @@ def main():
     del dataframes_merged["day"]
 
     # reset the dataframe index
-    reindexed_final_df = dataframes_merged.set_index("year")
-
-    print(reindexed_final_df)
+    reindexed_final_df = dataframes_merged
 
     # reuse of utility function to see how many unique values exist for each year in the dataframe:
     uniq_values_per_year = Utility(reindexed_final_df).get_row_value_counts("year")
@@ -136,97 +135,116 @@ def main():
     2014   4380   4380     4380  4380
     2015   4380   4380     4380  4380
     2016   4392   4392     4392  4392
-    2017   4380   4380     4380  4380
+    2017   4380   4380     4380  4308
     2018   4380   4380     4380  4380
     2019   4380   4380     4380  4380
     2020   4392   4392     4392  4392
     2021    200    200      200   200
     """
 
+    # get the average C02 trend level for each year.
+    # store the values in a list of dict, with year key and mean values list as value.
+    unique_years = reindexed_final_df["year"].unique()
+    mean_years_co2 = []
+    for year in unique_years:
+        averages = reindexed_final_df.loc[reindexed_final_df["year"] == year, "trend"]
+        float_list = [float(i) for i in averages.to_list()]
+        int_list = [int(i) for i in float_list]
+
+        value_dict = {year: list(set(int_list))}
+        mean_years.append(value_dict)
+
+    print(mean_years_co2)
+
     # begin plotting
 
-    """
-    ==================================================================================================================
-    Dataset cleaning:
-    ==================================================================================================================
-    The global warming dataset I have chosen has already been cleaned, and appears to be in good condition. 
-    For the sake of fulfilling the milestone requirements of the project, I will demonstrate some data cleansing
-    best practices with a datasets that is better suited for the same:
-
-    Dataset: Iris Species
-
-    Classify iris plants into three species in this classic dataset
-    
-    https://www.kaggle.com/uciml/iris
-    ==================================================================================================================
-    """
-
-    # This data is from a CSV import, the file can be found in the data folder of the project repo.
-    # import the csv file:
-    iris_species = pd.read_csv("data/iris.csv")
-    iris_species_dataframe = pd.DataFrame(iris_species)
-
-    # get the number of distinct values in a column, in this case the number of different species in the species column
-    distinct_species = iris_species_dataframe["Species"].value_counts()
-
-    """
-    Output: 
-
-    Iris-setosa        50
-    Iris-versicolor    50
-    Iris-virginica     50
-    """
-
-    # visually represent this breakdown on a bar-chart:
-
-    # create the x-labels for the graph
-    distinct_species_x_labels_unformatted = list(distinct_species.index)
-    distinct_species_y_labels_unformatted = list(distinct_species.values)
-
-    # iterate over the list and remove the 'Iris-' part of the string, it is not needed
-    # store the new formatted values in a new list called 'distinct_species_x_labels_formatted.
-
-    distinct_species_x_labels_formatted = []
-
-    for item in distinct_species_x_labels_unformatted:
-        distinct_species_x_labels_formatted.append(item.split("-")[-1])
-
-    bar_chart = plt.bar(
-        distinct_species_x_labels_formatted,
-        distinct_species_y_labels_unformatted,
-        color=["cyan", "magenta", "royalblue"],
-    )
+    # year = reindexed_final_df.index.values
+    # trend_values = reindexed_final_df.iloc[:, 1].values
+    # plt.plot(trend_values, year)
     # plt.show()
 
-    # observe the different variable types in the dataframe
-    """
-    print(iris_species_dataframe.dtypes)
+    # """
+    # ==================================================================================================================
+    # Dataset cleaning:
+    # ==================================================================================================================
+    # The global warming dataset I have chosen has already been cleaned, and appears to be in good condition.
+    # For the sake of fulfilling the milestone requirements of the project, I will demonstrate some data cleansing
+    # best practices with a datasets that is better suited for the same:
 
-    output:
+    # Dataset: Iris Species
 
-    Id                 int64
-    SepalLengthCm    float64
-    SepalWidthCm     float64
-    PetalLengthCm    float64
-    PetalWidthCm     float64
-    Species           object
-    dtype: object
+    # Classify iris plants into three species in this classic dataset
 
-    """
+    # https://www.kaggle.com/uciml/iris
+    # ==================================================================================================================
+    # """
 
-    # get the number of na values per column:
-    nan_values_per_column = iris_species_dataframe.isna().sum()
-    """
-    Output:
-    
-    Id               0
-    SepalLengthCm    0
-    SepalWidthCm     0
-    PetalLengthCm    0
-    PetalWidthCm     0
-    Species          0
-    dtype: int64
-    """
+    # # This data is from a CSV import, the file can be found in the data folder of the project repo.
+    # # import the csv file:
+    # iris_species = pd.read_csv("data/iris.csv")
+    # iris_species_dataframe = pd.DataFrame(iris_species)
+
+    # # get the number of distinct values in a column, in this case the number of different species in the species column
+    # distinct_species = iris_species_dataframe["Species"].value_counts()
+
+    # """
+    # Output:
+
+    # Iris-setosa        50
+    # Iris-versicolor    50
+    # Iris-virginica     50
+    # """
+
+    # # visually represent this breakdown on a bar-chart:
+
+    # # create the x-labels for the graph
+    # distinct_species_x_labels_unformatted = list(distinct_species.index)
+    # distinct_species_y_labels_unformatted = list(distinct_species.values)
+
+    # # iterate over the list and remove the 'Iris-' part of the string, it is not needed
+    # # store the new formatted values in a new list called 'distinct_species_x_labels_formatted.
+
+    # distinct_species_x_labels_formatted = []
+
+    # for item in distinct_species_x_labels_unformatted:
+    #     distinct_species_x_labels_formatted.append(item.split("-")[-1])
+
+    # bar_chart = plt.bar(
+    #     distinct_species_x_labels_formatted,
+    #     distinct_species_y_labels_unformatted,
+    #     color=["cyan", "magenta", "royalblue"],
+    # )
+    # # plt.show()
+
+    # # observe the different variable types in the dataframe
+    # """
+    # print(iris_species_dataframe.dtypes)
+
+    # output:
+
+    # Id                 int64
+    # SepalLengthCm    float64
+    # SepalWidthCm     float64
+    # PetalLengthCm    float64
+    # PetalWidthCm     float64
+    # Species           object
+    # dtype: object
+
+    # """
+
+    # # get the number of na values per column:
+    # nan_values_per_column = iris_species_dataframe.isna().sum()
+    # """
+    # Output:
+
+    # Id               0
+    # SepalLengthCm    0
+    # SepalWidthCm     0
+    # PetalLengthCm    0
+    # PetalWidthCm     0
+    # Species          0
+    # dtype: int64
+    # """
 
 
 # python specific, allows explicit call
