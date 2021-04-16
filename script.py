@@ -142,26 +142,45 @@ def main():
     2021    200    200      200   200
     """
 
+    print(reindexed_final_df)
     # get the average C02 trend level for each year.
-    # store the values in a list of dict, with year key and mean values list as value.
     unique_years = reindexed_final_df["year"].unique()
-    mean_years_co2 = []
+    years_averages_co2 = []
+
+    # for every year, get the average occuring values
     for year in unique_years:
         averages = reindexed_final_df.loc[reindexed_final_df["year"] == year, "trend"]
         float_list = [float(i) for i in averages.to_list()]
         int_list = [int(i) for i in float_list]
+        years_averages_co2.append(list(set(int_list)))
 
-        value_dict = {year: list(set(int_list))}
-        mean_years.append(value_dict)
+    # get the mean c02 values per year
+    mean_per_year = []
+    for i in years_averages_co2:
+        mean = Utility.Average(i)
+        mean_per_year.append(mean)
 
-    print(mean_years_co2)
-
-    # begin plotting
-
-    # year = reindexed_final_df.index.values
-    # trend_values = reindexed_final_df.iloc[:, 1].values
-    # plt.plot(trend_values, year)
+    # plot C02 levels with line
+    # plt.plot(mean_per_year, unique_years, color="red")
+    # plt.xlabel("C02 ppm (parts per million)")
     # plt.show()
+
+    # perform the same task for the temperature increase
+    station_averages = []
+    for year in unique_years:
+        station_averages = reindexed_final_df.loc[
+            reindexed_final_df["year"] == year, "station"
+        ]
+
+        # get the mean station values per year
+        mean_station_per_year = []
+        for i in station_averages.to_list():
+            print(i)
+
+        # plot station temperature increase levels with line
+        # plt.plot(mean_station_per_year, unique_years, color="orange")
+        # plt.xlabel("Temperature increase")
+        # plt.show()
 
     # """
     # ==================================================================================================================

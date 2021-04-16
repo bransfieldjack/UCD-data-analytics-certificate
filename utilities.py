@@ -54,3 +54,9 @@ class Utility:
     def get_row_value_counts(self, column):
         res = self._df.groupby([column]).count()
         return res
+
+    def Average(lst):
+        """
+        Get the mean of a list of numbers
+        """
+        return sum(lst) / len(lst)
