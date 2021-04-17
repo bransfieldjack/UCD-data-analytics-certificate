@@ -160,11 +160,6 @@ def main():
         mean = Utility.Average(i)
         mean_per_year.append(mean)
 
-    # plot C02 levels with line
-    plt.plot(unique_years, mean_per_year, color="red")
-    plt.ylabel("C02 ppm (parts per million)")
-    plt.show()
-
     # perform the same task for the temperature increase
     mean_station_averages = []
     for year in unique_years:
@@ -178,9 +173,11 @@ def main():
         mean_temperateure_rounded = round(mean, 2)
         mean_station_averages.append(mean_temperateure_rounded)
 
-    # plot station temperature increase levels with line
-    plt.plot(unique_years, mean_station_averages, color="orange")
-    plt.ylabel("Temperature increase (Celcius)")
+    fig, axs = plt.subplots(2)
+    axs[0].scatter(unique_years, mean_per_year, color="red")
+    axs[0].set_title("C02 ppm (parts per million)")
+    axs[1].scatter(unique_years, mean_station_averages, color="orange")
+    axs[1].set_title("Temperature increase (Celcius)")
     plt.show()
 
 
