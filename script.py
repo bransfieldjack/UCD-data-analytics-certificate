@@ -142,7 +142,6 @@ def main():
     2021    200    200      200   200
     """
 
-    print(reindexed_final_df)
     # get the average C02 trend level for each year.
     unique_years = reindexed_final_df["year"].unique()
     years_averages_co2 = []
@@ -178,7 +177,7 @@ def main():
     axs[0].set_title("C02 ppm (parts per million)")
     axs[1].scatter(unique_years, mean_station_averages, color="orange")
     axs[1].set_title("Temperature increase (Celcius)")
-    plt.show()
+    # plt.show()
 
 
 """
@@ -188,6 +187,39 @@ CSV obtained from ourworldindata.org
 https://ourworldindata.org/explorers/energy?time=2011&country=~OWID_WRL&Total+or+Breakdown=Total&Energy+or+Electricity=Primary+energy&Metric=Annual+consumption
 ==================================================================================================================
 """
+
+energy_data = pd.read_csv("data/energy.csv")
+energy_dataframe = pd.DataFrame(energy_data)
+
+# rename 'entity' column to country
+energy_dataframe.rename(columns={"Entity": "Country"}, inplace=True)
+
+# distinct country names:
+countries = energy_dataframe["Country"].unique()
+
+# filter to only return rows beginning from 2011
+energy_filtered_for_time = energy_dataframe[energy_dataframe["Year"] >= 2011]
+
+# for each country, get the year and its associated energy demand in TwHours:
+country_energy_usage = []
+for country in countries:
+    country_years = energy_filtered_for_time.loc[
+        energy_filtered_for_time["Country"] == country,
+        "Year",
+    ]
+    for year in country_years:
+
+        yearly_demand = energy_filtered_for_time.loc[
+            energy_filtered_for_time["Country"] == country,
+            "Primary energy consumption (TWh)",
+        ]
+        # convert yearly_demand to list, pass to utility to return mean value for each year
+        mean = Utility.Average(list(yearly_demand))
+        # for value in yearly_demand:
+        value_dict = {"country": country, year: mean}
+        country_energy_usage.append(value_dict)
+
+# begin plotting for list of dict values
 
 
 # python specific, allows explicit call
