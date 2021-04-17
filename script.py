@@ -161,109 +161,27 @@ def main():
         mean_per_year.append(mean)
 
     # plot C02 levels with line
-    # plt.plot(mean_per_year, unique_years, color="red")
-    # plt.xlabel("C02 ppm (parts per million)")
-    # plt.show()
+    plt.plot(unique_years, mean_per_year, color="red")
+    plt.ylabel("C02 ppm (parts per million)")
+    plt.show()
 
     # perform the same task for the temperature increase
-    station_averages = []
+    mean_station_averages = []
     for year in unique_years:
         station_averages = reindexed_final_df.loc[
             reindexed_final_df["year"] == year, "station"
         ]
+        float_list = [float(i) for i in station_averages.to_list()]
+        unique_values = list(set(float_list))
 
-        # get the mean station values per year
-        mean_station_per_year = []
-        for i in station_averages.to_list():
-            print(i)
+        mean = Utility.Average(unique_values)
+        mean_temperateure_rounded = round(mean, 2)
+        mean_station_averages.append(mean_temperateure_rounded)
 
-        # plot station temperature increase levels with line
-        # plt.plot(mean_station_per_year, unique_years, color="orange")
-        # plt.xlabel("Temperature increase")
-        # plt.show()
-
-    # """
-    # ==================================================================================================================
-    # Dataset cleaning:
-    # ==================================================================================================================
-    # The global warming dataset I have chosen has already been cleaned, and appears to be in good condition.
-    # For the sake of fulfilling the milestone requirements of the project, I will demonstrate some data cleansing
-    # best practices with a datasets that is better suited for the same:
-
-    # Dataset: Iris Species
-
-    # Classify iris plants into three species in this classic dataset
-
-    # https://www.kaggle.com/uciml/iris
-    # ==================================================================================================================
-    # """
-
-    # # This data is from a CSV import, the file can be found in the data folder of the project repo.
-    # # import the csv file:
-    # iris_species = pd.read_csv("data/iris.csv")
-    # iris_species_dataframe = pd.DataFrame(iris_species)
-
-    # # get the number of distinct values in a column, in this case the number of different species in the species column
-    # distinct_species = iris_species_dataframe["Species"].value_counts()
-
-    # """
-    # Output:
-
-    # Iris-setosa        50
-    # Iris-versicolor    50
-    # Iris-virginica     50
-    # """
-
-    # # visually represent this breakdown on a bar-chart:
-
-    # # create the x-labels for the graph
-    # distinct_species_x_labels_unformatted = list(distinct_species.index)
-    # distinct_species_y_labels_unformatted = list(distinct_species.values)
-
-    # # iterate over the list and remove the 'Iris-' part of the string, it is not needed
-    # # store the new formatted values in a new list called 'distinct_species_x_labels_formatted.
-
-    # distinct_species_x_labels_formatted = []
-
-    # for item in distinct_species_x_labels_unformatted:
-    #     distinct_species_x_labels_formatted.append(item.split("-")[-1])
-
-    # bar_chart = plt.bar(
-    #     distinct_species_x_labels_formatted,
-    #     distinct_species_y_labels_unformatted,
-    #     color=["cyan", "magenta", "royalblue"],
-    # )
-    # # plt.show()
-
-    # # observe the different variable types in the dataframe
-    # """
-    # print(iris_species_dataframe.dtypes)
-
-    # output:
-
-    # Id                 int64
-    # SepalLengthCm    float64
-    # SepalWidthCm     float64
-    # PetalLengthCm    float64
-    # PetalWidthCm     float64
-    # Species           object
-    # dtype: object
-
-    # """
-
-    # # get the number of na values per column:
-    # nan_values_per_column = iris_species_dataframe.isna().sum()
-    # """
-    # Output:
-
-    # Id               0
-    # SepalLengthCm    0
-    # SepalWidthCm     0
-    # PetalLengthCm    0
-    # PetalWidthCm     0
-    # Species          0
-    # dtype: int64
-    # """
+    # plot station temperature increase levels with line
+    plt.plot(unique_years, mean_station_averages, color="orange")
+    plt.ylabel("Temperature increase (Celcius)")
+    plt.show()
 
 
 # python specific, allows explicit call
