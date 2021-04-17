@@ -181,6 +181,15 @@ def main():
     plt.show()
 
 
+"""
+==================================================================================================================
+Begin correlation between temperature C02 rise and growth in global energy demand
+CSV obtained from ourworldindata.org
+https://ourworldindata.org/explorers/energy?time=2011&country=~OWID_WRL&Total+or+Breakdown=Total&Energy+or+Electricity=Primary+energy&Metric=Annual+consumption
+==================================================================================================================
+"""
+
+
 # python specific, allows explicit call
 if __name__ == "__main__":
     main()
