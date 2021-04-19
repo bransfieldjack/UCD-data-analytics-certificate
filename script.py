@@ -172,54 +172,78 @@ def main():
         mean_temperateure_rounded = round(mean, 2)
         mean_station_averages.append(mean_temperateure_rounded)
 
-    fig, axs = plt.subplots(2)
+    """
+    ==================================================================================================================
+    Begin correlation between temperature C02 rise and growth in global energy demand
+    CSV obtained from data.worldbank.org
+    https://data.worldbank.org/indicator/EG.USE.PCAP.KG.OE?end=2015&start=2015&view=bar
+    ==================================================================================================================
+    """
+
+    energy_data = pd.read_csv("data/energy.csv")
+    energy_dataframe = pd.DataFrame(energy_data)
+
+    # rename 'entity' column to country
+    energy_dataframe.rename(columns={"Entity": "Country"}, inplace=True)
+
+    # distinct country names:
+    world_dataframe = energy_dataframe[energy_dataframe["Country"] == "World"]
+
+    # filter to only return rows beginning from 2011
+    energy_filtered_for_time = world_dataframe[world_dataframe["Year"] >= 2011]
+
+    # utility checks:
+    util = Utility(energy_filtered_for_time)  # init utility class with dataframe
+    columns_list = util.check_rows_null_values(
+        energy_filtered_for_time.columns
+    )  # call check_rows_null_values()
+
+    # output:
+    """
+    [{'Name': 'Country', 'Null counts': 0}, 
+    {'Name': 'Code', 'Null counts': 201}, 
+    {'Name': 'Year', 'Null counts': 0}, 
+    {'Name': 'Primary energy consumption (TWh)', 'Null counts': 0}]
+    """
+
+    # dropping 'Code' & 'Country' - column, not required
+    del energy_filtered_for_time["Code"]
+    del energy_filtered_for_time["Country"]
+
+    year = energy_filtered_for_time["Year"]
+    energy = energy_filtered_for_time["Primary energy consumption (TWh)"]
+
+    """
+    Plot all data here:
+    """
+    fig, axs = plt.subplots(3)
+
+    # Co2 plot
     axs[0].scatter(unique_years, mean_per_year, color="red")
-    axs[0].set_title("C02 ppm (parts per million)")
+    m, b = np.polyfit(unique_years, mean_per_year, 1)  # linear regression line
+    axs[0].plot(unique_years, m * unique_years + b)
+    axs[0].set_title("C02 ppm (parts per million) 2011 - 2020")
+    axs[0].set_ylabel("PPM")
+    axs[0].set_xlabel("Years")
+
+    # Temperature plot
     axs[1].scatter(unique_years, mean_station_averages, color="orange")
-    axs[1].set_title("Temperature increase (Celcius)")
-    # plt.show()
+    m, b = np.polyfit(unique_years, mean_station_averages, 1)  # linear regression line
+    axs[1].plot(unique_years, m * unique_years + b)
+    axs[1].set_title("Temperature increase (Celcius) 2011 - 2020")
+    axs[1].set_ylabel("Degrees Celsius")
+    axs[1].set_xlabel("Years")
 
+    # Energy plot
+    axs[2].scatter(year, energy, color="purple")
+    m, b = np.polyfit(year, energy, 1)  # linear regression line
+    axs[2].plot(year, m * year + b)
+    axs[2].set_title("Global Energy demand 2011 - 2019")
+    axs[2].set_ylabel("Primary energy consumption (TWh)")
+    axs[2].set_xlabel("Years")
+    plt.show()
 
-"""
-==================================================================================================================
-Begin correlation between temperature C02 rise and growth in global energy demand
-CSV obtained from ourworldindata.org
-https://ourworldindata.org/explorers/energy?time=2011&country=~OWID_WRL&Total+or+Breakdown=Total&Energy+or+Electricity=Primary+energy&Metric=Annual+consumption
-==================================================================================================================
-"""
-
-energy_data = pd.read_csv("data/energy.csv")
-energy_dataframe = pd.DataFrame(energy_data)
-
-# rename 'entity' column to country
-energy_dataframe.rename(columns={"Entity": "Country"}, inplace=True)
-
-# distinct country names:
-countries = energy_dataframe["Country"].unique()
-
-# filter to only return rows beginning from 2011
-energy_filtered_for_time = energy_dataframe[energy_dataframe["Year"] >= 2011]
-
-# for each country, get the year and its associated energy demand in TwHours:
-country_energy_usage = []
-for country in countries:
-    country_years = energy_filtered_for_time.loc[
-        energy_filtered_for_time["Country"] == country,
-        "Year",
-    ]
-    for year in country_years:
-
-        yearly_demand = energy_filtered_for_time.loc[
-            energy_filtered_for_time["Country"] == country,
-            "Primary energy consumption (TWh)",
-        ]
-        # convert yearly_demand to list, pass to utility to return mean value for each year
-        mean = Utility.Average(list(yearly_demand))
-        # for value in yearly_demand:
-        value_dict = {"country": country, year: mean}
-        country_energy_usage.append(value_dict)
-
-# begin plotting for list of dict values
+    # linear regression plot:
 
 
 # python specific, allows explicit call
