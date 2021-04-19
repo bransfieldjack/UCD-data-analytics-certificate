@@ -217,6 +217,7 @@ def main():
     Plot all data here:
     """
     fig, axs = plt.subplots(3)
+    fig.tight_layout(pad=3.0)
 
     # Co2 plot
     axs[0].scatter(unique_years, mean_per_year, color="red")
