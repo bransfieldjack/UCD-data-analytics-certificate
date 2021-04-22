@@ -63,18 +63,19 @@ def main():
 
     # rows with missing data
     rows_null_data = co2_df[co2_df.isnull()]
+    # print(rows_null_data)
 
     """
     Get the sum of all null values in a specific row (replace with any column from dataframe).
-    Instead of manually assigning each column name and checking individually, I used a utility function 'check_rows_null_values()'.
+    Instead of manually assigning each column name and checking individually, I created a reuseable a utility function 'check_rows_null_values()'.
     The function will use a for loop to iterate over a list of column names contained in the dataframe, 
     and return a count for the number of null values in each columns corresponding rows. 
     """
 
     util = Utility(co2_df)  # init utility class with dataframe
-    columns_list = util.check_rows_null_values(
+    columns_list = util.check_rows_null_values(  # call check_rows_null_values()
         co2_df.columns
-    )  # call check_rows_null_values()
+    )
 
     # (optional) for ease of use, convert the list of dict again to a dataframe to get a report of the findings:
     null_row_value_report = pd.DataFrame(columns_list)
@@ -146,7 +147,7 @@ def main():
     unique_years = reindexed_final_df["year"].unique()
     years_averages_co2 = []
 
-    # for every year, get the average occuring values
+    # for every year, get the average values
     for year in unique_years:
         averages = reindexed_final_df.loc[reindexed_final_df["year"] == year, "trend"]
         float_list = [float(i) for i in averages.to_list()]
@@ -242,9 +243,37 @@ def main():
     axs[2].set_title("Global Energy demand 2011 - 2019")
     axs[2].set_ylabel("Primary energy consumption (TWh)")
     axs[2].set_xlabel("Years")
-    plt.show()
+    # plt.show()
 
     # linear regression plot:
+    # merge all dataframes and export to csv:
+
+    # rename 'Year' column to 'year'
+    energy_filtered_for_time = energy_filtered_for_time.rename(columns={"Year": "year"})
+
+    """
+    Merge both datasets into one dataframe for use with Tensorflow:
+    """
+
+    merged = pd.merge(
+        reindexed_final_df,
+        energy_filtered_for_time,
+        left_on="year",
+        right_on="year",
+        how="left",
+    )
+
+    print("merged: ")
+    print(merged)
+
+    # frames = [reindexed_final_df, energy_filtered_for_time]
+    # result = pd.concat(frames)
+    # print("result is:")
+    # print(result)
+
+    # reindexed_final_df.merge(
+    #     energy_filtered_for_time, on="key", left_index=True, right_index=True
+    # )
 
 
 # python specific, allows explicit call
