@@ -264,20 +264,7 @@ def main():
         how="left",
     )
 
-    data = ClimateModel(merged)
-    tf = TensorFlowProcessing()
-
-    # print("merged: ")
-    # print(merged)
-
-    # frames = [reindexed_final_df, energy_filtered_for_time]
-    # result = pd.concat(frames)
-    # print("result is:")
-    # print(result)
-
-    # reindexed_final_df.merge(
-    #     energy_filtered_for_time, on="key", left_index=True, right_index=True
-    # )
+    tf = TensorFlowProcessing(merged)
 
 
 # python specific, allows explicit call
