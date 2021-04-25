@@ -155,8 +155,8 @@ class TensorFlowProcessing:
                 label="Data",
             )
             plt.plot(x, y, color="k", label="Predictions")
-            plt.xlabel("Primary energy consumption (TWh)")
-            plt.ylabel("C02")
+            plt.ylabel("Primary energy consumption (TWh)")
+            plt.xlabel("C02")
             plt.legend()
             plt.show()
 

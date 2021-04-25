@@ -1,5 +1,6 @@
 import requests, json
 import pandas as pd
+from typing import Dict, Union
 
 
 class Utility:
@@ -9,11 +10,11 @@ class Utility:
     The class constructor expects an optional 'df' parameter of dataframe, defaulting to None.
     """
 
-    def __init__(self, df=None):
+    def __init__(self, df=None) -> None:
         self._df = df
         self._row_null_values = None
 
-    def fetch_data_from_api(self, url):
+    def fetch_data_from_api(self, url) -> Union[Dict[str, str], str]:
         """
         fetch data from an API and return JSON
         """
@@ -32,7 +33,7 @@ class Utility:
             print("An exception occurred in 'fetch_data_from_api()': " + exception)
             return "An exception occurred in 'fetch_data_from_api()': " + exception
 
-    def check_rows_null_values(self, columns):
+    def check_rows_null_values(self, columns) -> list:
         """
         Expects a parameter called 'columns' of type list.
         The function will iterate over the columns list and return a new list containing a value dictionary
@@ -51,11 +52,11 @@ class Utility:
         self._row_null_values = value_dict_list
         return self._row_null_values
 
-    def get_row_value_counts(self, column):
+    def get_row_value_counts(self, column) -> int:
         res = self._df.groupby([column]).count()
         return res
 
-    def Average(lst):
+    def Average(lst) -> int:
         """
         Get the mean of a list of numbers
         """

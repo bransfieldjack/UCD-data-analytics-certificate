@@ -246,6 +246,9 @@ def main():
     axs[2].set_xlabel("Years")
     # plt.show()
 
+    """
+    * (Optional) Extra but not part of this course *
+    """
     # linear regression plot:
     # merge all dataframes and export to csv:
 
@@ -264,7 +267,8 @@ def main():
         how="left",
     )
 
-    tf = TensorFlowProcessing(merged)
+    # uncomment this line for result
+    # tf = TensorFlowProcessing(merged)
 
 
 # python specific, allows explicit call
