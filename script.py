@@ -68,7 +68,7 @@ def main():
 
     """
     Get the sum of all null values in a specific row (replace with any column from dataframe).
-    Instead of manually assigning each column name and checking individually, I created a reuseable a utility function 'check_rows_null_values()'.
+    Instead of manually assigning each column name and checking individually, I created a reuseable utility function 'check_rows_null_values()'.
     The function will use a for loop to iterate over a list of column names contained in the dataframe, 
     and return a count for the number of null values in each columns corresponding rows. 
     """
@@ -244,7 +244,7 @@ def main():
     axs[2].set_title("Global Energy demand 2011 - 2019")
     axs[2].set_ylabel("Primary energy consumption (TWh)")
     axs[2].set_xlabel("Years")
-    # plt.show()
+    plt.show()
 
     """
     * (Optional) Extra but not part of this course *
